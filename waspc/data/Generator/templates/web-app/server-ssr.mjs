@@ -70,6 +70,11 @@ if (typeof globalThis.window === "undefined") {
     dispatchEvent: () => true,
     head: { appendChild: () => {}, removeChild: () => {}, insertBefore: () => {}, firstChild: null, childNodes: [] },
     styleSheets: [],
+    // Clipboard-era APIs probed at module scope by editor/clipboard libraries
+    // (e.g. `document.queryCommandSupported("cut")` in monaco-adjacent code).
+    queryCommandSupported: () => false,
+    queryCommandEnabled: () => false,
+    execCommand: () => false,
   };
   // In Node.js >= 21 `navigator` is a built-in read-only getter on globalThis,
   // so a plain assignment throws. Use Object.defineProperty to safely provide
@@ -89,6 +94,42 @@ if (typeof globalThis.window === "undefined") {
   globalThis.CustomEvent = globalThis.CustomEvent || class CustomEvent extends Event {
     constructor(type, params = {}) { super(type); this.detail = params.detail || null; }
   };
+  // Editor-grade bundles (Monaco and friends) subclass DOM event types and
+  // probe observers/CSS APIs at module scope. Provide inert stand-ins — SSR
+  // never dispatches or observes them.
+  globalThis.self = globalThis.self || globalThis;
+  globalThis.UIEvent = globalThis.UIEvent || class UIEvent extends Event {};
+  globalThis.MouseEvent = globalThis.MouseEvent || class MouseEvent extends globalThis.UIEvent {};
+  globalThis.KeyboardEvent = globalThis.KeyboardEvent || class KeyboardEvent extends globalThis.UIEvent {};
+  globalThis.PointerEvent = globalThis.PointerEvent || class PointerEvent extends globalThis.MouseEvent {};
+  globalThis.WheelEvent = globalThis.WheelEvent || class WheelEvent extends globalThis.MouseEvent {};
+  globalThis.DragEvent = globalThis.DragEvent || class DragEvent extends globalThis.MouseEvent {};
+  globalThis.FocusEvent = globalThis.FocusEvent || class FocusEvent extends globalThis.UIEvent {};
+  globalThis.InputEvent = globalThis.InputEvent || class InputEvent extends globalThis.UIEvent {};
+  globalThis.CompositionEvent = globalThis.CompositionEvent || class CompositionEvent extends globalThis.UIEvent {};
+  globalThis.ClipboardEvent = globalThis.ClipboardEvent || class ClipboardEvent extends Event {};
+  globalThis.TouchEvent = globalThis.TouchEvent || class TouchEvent extends globalThis.UIEvent {};
+  globalThis.ResizeObserver = globalThis.ResizeObserver || class ResizeObserver {
+    observe() {} unobserve() {} disconnect() {}
+  };
+  globalThis.IntersectionObserver = globalThis.IntersectionObserver || class IntersectionObserver {
+    observe() {} unobserve() {} disconnect() {} takeRecords() { return []; }
+  };
+  globalThis.MutationObserver = globalThis.MutationObserver || class MutationObserver {
+    observe() {} disconnect() {} takeRecords() { return []; }
+  };
+  globalThis.requestAnimationFrame = globalThis.requestAnimationFrame || ((cb) => setTimeout(() => cb(Date.now()), 0));
+  globalThis.cancelAnimationFrame = globalThis.cancelAnimationFrame || clearTimeout;
+  globalThis.requestIdleCallback = globalThis.requestIdleCallback
+    || ((cb) => setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 0 }), 0));
+  globalThis.cancelIdleCallback = globalThis.cancelIdleCallback || clearTimeout;
+  globalThis.getComputedStyle = globalThis.getComputedStyle || (() => ({ getPropertyValue: () => "" }));
+  globalThis.DOMParser = globalThis.DOMParser || class DOMParser {
+    parseFromString() {
+      return { body: { textContent: "" }, documentElement: { textContent: "" }, querySelector: () => null, querySelectorAll: () => [] };
+    }
+  };
+  globalThis.CSS = globalThis.CSS || { escape: (value) => String(value), supports: () => false };
   globalThis.matchMedia = globalThis.matchMedia || (() => ({
     matches: false,
     addEventListener: () => {},
