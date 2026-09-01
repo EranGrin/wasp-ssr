@@ -28,7 +28,10 @@ export function getValidatedEnvOrError<Schema extends z.ZodType>(
 
 // PRIVATE API (SDK, Vite config)
 export function formatZodEnvError(error: z.ZodError): string {
-  const flattenedIssues = z.flattenError(error);
+  const flattenedIssues = z.flattenError(error) as {
+    formErrors: string[];
+    fieldErrors: Record<string, string[] | undefined>;
+  };
 
   return [
     '',
