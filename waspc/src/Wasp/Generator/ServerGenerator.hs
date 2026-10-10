@@ -78,6 +78,7 @@ genServer :: AppSpec -> Generator [FileDraft]
 genServer spec =
   sequence
     [ genFileCopy [relfile|README.md|],
+      genFileCopy [relfile|watch-server.mjs|],
       genRollupConfigJs spec,
       genTsConfigJson spec,
       genPackageJson spec npmDeps,
