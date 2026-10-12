@@ -1,5 +1,5 @@
 /** Keep nodemon's direct child alive until its entire owned server group stops. */
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
@@ -54,16 +54,40 @@ export function linuxGroupState(group, { procRoot = '/proc', selfPid = process.p
   } catch { return 'unknown'; }
 }
 
-export function groupExists(pid, { platform = process.platform, procOptions } = {}) {
+// Darwin answers kill(-pgid, sig) with EPERM, not ESRCH, when every member of
+// the group is an unreaped zombie. A stable `ps` census in which each member
+// is a zombie (or the group is gone) establishes that; anything else,
+// including a ps failure or a live member, keeps the EPERM.
+export function darwinGroupState(group, { runPs = () => execFileSync('ps', ['-A', '-o', 'pid=,pgid=,stat='], { encoding: 'utf8' }) } = {}) {
+  try {
+    const census = () => runPs().split('\n').map(line => line.trim().split(/\s+/))
+      .filter(fields => fields.length >= 3 && /^\d+$/.test(fields[0]) && /^\d+$/.test(fields[1]))
+      .map(([pid, pgid, stat]) => ({ pid, pgid: Number(pgid), stat }))
+      .filter(row => row.pgid === group);
+    const before = census();
+    if (before.some(row => !row.stat.startsWith('Z'))) return 'live';
+    const after = census();
+    if (JSON.stringify(before) !== JSON.stringify(after)) return 'unknown';
+    return before.length === 0 ? 'empty' : 'zombie-only';
+  } catch { return 'unknown'; }
+}
+function darwinStopped(error, pid, platform, psOptions) {
+  return error.code === 'EPERM' && platform === 'darwin' &&
+    ['zombie-only', 'empty'].includes(darwinGroupState(pid, psOptions));
+}
+export function groupExists(pid, { platform = process.platform, procOptions, psOptions } = {}) {
   try {
     process.kill(-pid, 0);
     return platform !== 'linux' || linuxGroupState(pid, procOptions) !== 'zombie-only';
   }
-  catch (error) { if (error.code === 'ESRCH') return false; throw error; }
+  catch (error) {
+    if (error.code === 'ESRCH' || darwinStopped(error, pid, platform, psOptions)) return false;
+    throw error;
+  }
 }
 function signalGroup(pid, signal) {
   try { process.kill(-pid, signal); }
-  catch (error) { if (error.code !== 'ESRCH') throw error; }
+  catch (error) { if (error.code !== 'ESRCH' && !darwinStopped(error, pid, process.platform)) throw error; }
 }
 async function waitForGroup(pid, timeout) {
   const deadline = Date.now() + timeout;

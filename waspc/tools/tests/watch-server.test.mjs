@@ -8,7 +8,7 @@ import net from 'node:net';
 import { once } from 'node:events';
 import { readFileSync } from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
-import { supervise, linuxGroupState, groupExists } from '../../data/Generator/templates/server/watch-server.mjs';
+import { supervise, linuxGroupState, groupExists, darwinGroupState } from '../../data/Generator/templates/server/watch-server.mjs';
 const helper = new URL('../../data/Generator/templates/server/watch-server.mjs', import.meta.url).href;
 const posix = { skip: process.platform === 'win32', timeout: 10_000 };
 function procFixture(records, options = {}) {
@@ -73,6 +73,36 @@ test('Linux census revalidates unrelated PID identity and group before declaring
     })), 'unknown');
   }
 });
+test('Darwin census: zombie-only and empty groups are stopped; live, changing or failed views are not', () => {
+  const ps = rows => () => rows;
+  assert.equal(darwinGroupState(42, { runPs: ps('  42    42 Z\n  43    42 Z+\n  50     1 Ss\n') }), 'zombie-only');
+  assert.equal(darwinGroupState(42, { runPs: ps('  50     1 Ss\n') }), 'empty');
+  assert.equal(darwinGroupState(42, { runPs: ps('  42    42 Z\n  43    42 S\n') }), 'live');
+  let calls = 0;
+  const changing = () => (++calls === 1 ? '  42    42 Z\n' : '  42    42 Z\n  44    42 Z\n');
+  assert.equal(darwinGroupState(42, { runPs: changing }), 'unknown');
+  assert.equal(darwinGroupState(42, { runPs: () => { throw new Error('ps failed'); } }), 'unknown');
+});
+
+test('a real zombie-only group on Darwin is reported stopped, a live one is not', { skip: process.platform !== 'darwin' }, async () => {
+  // The parent forks a child that leads its own group and exits; the parent
+  // never reaps it, so the group holds only a zombie and kill(-pgid, 0)
+  // answers EPERM on Darwin.
+  const parent = spawn('/usr/bin/python3', ['-c',
+    'import os,sys,time\npid=os.fork()\nif pid==0:\n    os.setpgid(0,0); os._exit(0)\nprint(pid,flush=True); time.sleep(5)'],
+  { stdio: ['ignore', 'pipe', 'inherit'] });
+  try {
+    const [line] = await once(parent.stdout, 'data');
+    const pgid = Number(String(line).trim());
+    await delay(200);
+    assert.throws(() => process.kill(-pgid, 0), { code: 'EPERM' });
+    assert.equal(groupExists(pgid, { platform: 'darwin' }), false);
+    const live = spawn('sleep', ['5'], { detached: true, stdio: 'ignore' });
+    try { assert.equal(groupExists(live.pid, { platform: 'darwin' }), true); }
+    finally { process.kill(-live.pid, 'SIGKILL'); }
+  } finally { parent.kill('SIGKILL'); }
+});
+
 test('unknown or live Linux visibility never marks an existing group stopped', { skip: process.platform !== 'linux' }, () => {
   const fields = readFileSync('/proc/self/stat', 'utf8').split(') ').at(-1).split(' ');
   const ownGroup = Number(fields[2]);
