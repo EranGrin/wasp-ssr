@@ -11,6 +11,10 @@ const waspcDirPath = fileURLToPath(new URL("../..", import.meta.url));
 const dataLibsDirPath = join(waspcDirPath, "data", "Generator", "libs");
 const waspcVersion = getWaspcVersion();
 
+// Bootstrap the exact compressor from the tools lockfile before importing it.
+runCmd("npm", ["ci", "--include=dev"], { cwd: join(waspcDirPath, "tools") });
+const { normalizePackedTarball } = await import("./deterministic-pack.ts");
+
 buildLibs();
 
 function buildLibs(): void {
@@ -30,8 +34,11 @@ function buildLib(libDir: string): void {
 
   rmExistingTarballsInDir(libDir);
 
-  runCmd("npm", ["install"], { cwd: libDir });
+  runCmd("npm", ["ci", "--include=dev"], { cwd: libDir });
   runCmd("npm", ["pack"], { cwd: libDir });
+  const tarballs = readdirSync(libDir).filter(name => name.endsWith(".tgz"));
+  if (tarballs.length !== 1) throw new Error(`Expected one packed archive in ${libDir}`);
+  normalizePackedTarball(join(libDir, tarballs[0]));
 }
 
 function assertLibVersionValid(libName: string, libVersion: string): void {

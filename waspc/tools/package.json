@@ -2,6 +2,7 @@
   "name": "waspc-tools",
   "type": "module",
   "devDependencies": {
-    "@types/node": "^22.19.2"
+    "@types/node": "^22.19.2",
+    "fflate": "0.8.2"
   }
 }
