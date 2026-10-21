@@ -1,25 +1,25 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import GroupsIcon from '@mui/icons-material/Groups';
-import PublicIcon from '@mui/icons-material/Public';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import GroupsIcon from "@mui/icons-material/Groups";
+import PublicIcon from "@mui/icons-material/Public";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 // -- SEO head metadata for SSR --
 export const head = () => ({
-  title: 'About | MUI SSR Example',
+  title: "About | MUI SSR Example",
   meta: [
     {
-      name: 'description',
+      name: "description",
       content:
-        'Learn about Wasp SSR with MUI — server-side rendered pages with full CSS-in-JS support.',
+        "Learn about Wasp SSR with MUI — server-side rendered pages with full CSS-in-JS support.",
     },
-    { property: 'og:title', content: 'About | MUI SSR Example' },
+    { property: "og:title", content: "About | MUI SSR Example" },
   ],
 });
 
@@ -29,25 +29,25 @@ export const head = () => ({
 
 const STATS = [
   {
-    icon: <GroupsIcon sx={{ fontSize: 40, color: 'primary.main' }} />,
-    value: '10,000+',
-    label: 'Developers',
+    icon: <GroupsIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+    value: "10,000+",
+    label: "Developers",
     description:
-      'Wasp is trusted by thousands of developers building full-stack web applications with ease.',
+      "Wasp is trusted by thousands of developers building full-stack web applications with ease.",
   },
   {
-    icon: <PublicIcon sx={{ fontSize: 40, color: 'secondary.main' }} />,
-    value: '50+',
-    label: 'Countries',
+    icon: <PublicIcon sx={{ fontSize: 40, color: "secondary.main" }} />,
+    value: "50+",
+    label: "Countries",
     description:
-      'Our community spans the globe, with contributors and users on every continent.',
+      "Our community spans the globe, with contributors and users on every continent.",
   },
   {
-    icon: <WorkspacePremiumIcon sx={{ fontSize: 40, color: 'success.main' }} />,
-    value: '99.9%',
-    label: 'Uptime',
+    icon: <WorkspacePremiumIcon sx={{ fontSize: 40, color: "success.main" }} />,
+    value: "99.9%",
+    label: "Uptime",
     description:
-      'Built on proven technologies — React, Node.js, and Prisma — for reliability you can count on.',
+      "Built on proven technologies — React, Node.js, and Prisma — for reliability you can count on.",
   },
 ];
 
@@ -63,13 +63,16 @@ function AboutHero() {
         py: { xs: 10, md: 15 },
         background: (theme) =>
           `linear-gradient(135deg, ${theme.palette.grey[900]} 0%, ${theme.palette.grey[800]} 100%)`,
-        color: 'common.white',
+        color: "common.white",
       }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
-            <Typography variant="overline" sx={{ color: 'grey.500', mb: 2, display: 'block' }}>
+            <Typography
+              variant="overline"
+              sx={{ color: "grey.500", mb: 2, display: "block" }}
+            >
               About Us
             </Typography>
 
@@ -79,8 +82,8 @@ function AboutHero() {
 
             <Typography
               sx={{
-                color: 'grey.400',
-                fontSize: '1.125rem',
+                color: "grey.400",
+                fontSize: "1.125rem",
                 lineHeight: 1.7,
                 maxWidth: 480,
               }}
@@ -96,9 +99,9 @@ function AboutHero() {
               endIcon={<ArrowForwardIcon />}
               sx={{
                 mt: 4,
-                color: 'common.white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                '&:hover': { borderColor: 'common.white' },
+                color: "common.white",
+                borderColor: "rgba(255,255,255,0.3)",
+                "&:hover": { borderColor: "common.white" },
               }}
               variant="outlined"
             >
@@ -107,30 +110,35 @@ function AboutHero() {
           </Grid>
 
           <Grid
-            item xs={12} md={6}
+            item
+            xs={12}
+            md={6}
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             <Box
               sx={{
                 width: 280,
                 height: 280,
-                borderRadius: '50%',
+                borderRadius: "50%",
                 background: (theme) =>
                   `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
                 gap: 1,
               }}
             >
-              <Typography variant="h2" sx={{ color: 'common.white' }}>
+              <Typography variant="h2" sx={{ color: "common.white" }}>
                 SSR
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "rgba(255,255,255,0.7)" }}
+              >
                 Server-Side Rendered
               </Typography>
             </Box>
@@ -149,26 +157,29 @@ function StatsSection() {
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
       <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <Typography variant="overline" sx={{ color: 'text.disabled', mb: 2, display: 'block' }}>
+        <Box sx={{ textAlign: "center", mb: 8 }}>
+          <Typography
+            variant="overline"
+            sx={{ color: "text.disabled", mb: 2, display: "block" }}
+          >
             By the numbers
           </Typography>
           <Typography variant="h2">Built for scale</Typography>
         </Box>
 
         <Stack
-          direction={{ xs: 'column', md: 'row' }}
+          direction={{ xs: "column", md: "row" }}
           divider={
             <Divider
               orientation="vertical"
               flexItem
-              sx={{ borderStyle: 'dashed' }}
+              sx={{ borderStyle: "dashed" }}
             />
           }
           spacing={4}
         >
           {STATS.map((stat) => (
-            <Box key={stat.label} sx={{ flex: 1, textAlign: 'center', px: 2 }}>
+            <Box key={stat.label} sx={{ flex: 1, textAlign: "center", px: 2 }}>
               <Box sx={{ mb: 2 }}>{stat.icon}</Box>
 
               <Typography variant="h2" sx={{ mb: 0.5 }}>
@@ -177,12 +188,15 @@ function StatsSection() {
 
               <Typography
                 variant="overline"
-                sx={{ color: 'text.disabled', display: 'block', mb: 1.5 }}
+                sx={{ color: "text.disabled", display: "block", mb: 1.5 }}
               >
                 {stat.label}
               </Typography>
 
-              <Typography variant="body2" sx={{ color: 'text.secondary', maxWidth: 280, mx: 'auto' }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary", maxWidth: 280, mx: "auto" }}
+              >
                 {stat.description}
               </Typography>
             </Box>
@@ -203,39 +217,43 @@ function VerificationSection() {
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
-        bgcolor: 'primary.darker',
-        color: 'common.white',
+        bgcolor: "primary.darker",
+        color: "common.white",
       }}
     >
-      <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+      <Container maxWidth="md" sx={{ textAlign: "center" }}>
         <Typography variant="h3" sx={{ mb: 3 }}>
           Verify SSR is working
         </Typography>
 
-        <Typography sx={{ color: 'rgba(255,255,255,0.72)', mb: 4, fontSize: '1.125rem' }}>
+        <Typography
+          sx={{ color: "rgba(255,255,255,0.72)", mb: 4, fontSize: "1.125rem" }}
+        >
           Right-click anywhere on this page and select &quot;View Page
           Source&quot;. You should see all the content already rendered in the
-          HTML, along with{' '}
+          HTML, along with{" "}
           <Box
             component="code"
             sx={{
-              bgcolor: 'rgba(255,255,255,0.1)',
+              bgcolor: "rgba(255,255,255,0.1)",
               px: 1,
               py: 0.25,
               borderRadius: 0.5,
-              fontSize: '0.875rem',
+              fontSize: "0.875rem",
             }}
           >
             &lt;style data-emotion&gt;
-          </Box>{' '}
+          </Box>{" "}
           tags in the head containing all MUI styles.
         </Typography>
 
-        <Typography sx={{ color: 'rgba(255,255,255,0.72)', mb: 4, fontSize: '1rem' }}>
-          You can also try disabling JavaScript in your browser
-          (DevTools &rarr; Settings &rarr; Debugger &rarr; Disable JavaScript)
-          and reloading the page. SSR pages will still render their full content,
-          while non-SSR pages will show a blank screen.
+        <Typography
+          sx={{ color: "rgba(255,255,255,0.72)", mb: 4, fontSize: "1rem" }}
+        >
+          You can also try disabling JavaScript in your browser (DevTools &rarr;
+          Settings &rarr; Debugger &rarr; Disable JavaScript) and reloading the
+          page. SSR pages will still render their full content, while non-SSR
+          pages will show a blank screen.
         </Typography>
 
         <Stack direction="row" spacing={2} justifyContent="center">
@@ -243,9 +261,9 @@ function VerificationSection() {
             variant="contained"
             size="large"
             sx={{
-              bgcolor: 'common.white',
-              color: 'primary.dark',
-              '&:hover': { bgcolor: 'grey.100' },
+              bgcolor: "common.white",
+              color: "primary.dark",
+              "&:hover": { bgcolor: "grey.100" },
             }}
             href="/"
           >

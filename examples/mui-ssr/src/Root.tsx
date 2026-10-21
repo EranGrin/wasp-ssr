@@ -1,9 +1,9 @@
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Outlet } from 'react-router';
-import { theme } from './theme';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import { Outlet } from "react-router";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
+import { theme } from "./theme";
 
 export function Root() {
   return (

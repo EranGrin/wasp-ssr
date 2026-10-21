@@ -29,6 +29,7 @@ import qualified Wasp.Generator.WebAppGenerator.Common as WebApp
 data WebAppRootDir
 
 data WebAppViteBuildDir
+
 data WebAppViteSsrBuildDir
 
 -- We require the `web-app` dir to be generated for deployment purposes.

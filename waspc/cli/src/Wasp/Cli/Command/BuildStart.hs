@@ -8,6 +8,8 @@ import Control.Concurrent.Chan (newChan)
 import Control.Monad (when)
 import Control.Monad.Except (MonadError (throwError), runExceptT)
 import Control.Monad.IO.Class (liftIO)
+import qualified Wasp.AppSpec as AS
+import qualified Wasp.AppSpec.Page as Page
 import Wasp.Cli.Command (Command, CommandError (CommandError), require)
 import Wasp.Cli.Command.Build.DockerBuildContext (prepareFilesNecessaryForDockerBuild)
 import Wasp.Cli.Command.BuildStart.ArgumentsParser (buildStartArgsParser)
@@ -23,8 +25,6 @@ import Wasp.Job.Except (ExceptJob)
 import qualified Wasp.Job.Except as ExceptJob
 import Wasp.Job.IO (readJobMessagesAndPrintThemPrefixed)
 import qualified Wasp.Message as Msg
-import qualified Wasp.AppSpec as AS
-import qualified Wasp.AppSpec.Page as Page
 
 buildStart :: Arguments -> Command ()
 buildStart = withArguments "wasp build start" buildStartArgsParser $ \args -> do

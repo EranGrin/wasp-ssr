@@ -1,14 +1,14 @@
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { Link as RouterLink } from 'react-router';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { Link as RouterLink } from "react-router";
 
 const NAV_ITEMS = [
-  { label: 'Home', path: '/' },
-  { label: 'About', path: '/about' },
+  { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
 ];
 
 export function Header() {
@@ -16,10 +16,10 @@ export function Header() {
     <AppBar
       position="sticky"
       sx={{
-        bgcolor: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(8px)',
+        bgcolor: "rgba(255, 255, 255, 0.9)",
+        backdropFilter: "blur(8px)",
         borderBottom: 1,
-        borderColor: 'divider',
+        borderColor: "divider",
       }}
     >
       <Container maxWidth="lg">
@@ -29,8 +29,8 @@ export function Header() {
             to="/"
             variant="h5"
             sx={{
-              color: 'primary.main',
-              textDecoration: 'none',
+              color: "primary.main",
+              textDecoration: "none",
               fontWeight: 800,
               mr: 4,
             }}
@@ -38,18 +38,18 @@ export function Header() {
             Wasp MUI
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             {NAV_ITEMS.map((item) => (
               <Button
                 key={item.path}
                 component={RouterLink}
                 to={item.path}
                 sx={{
-                  color: 'text.primary',
+                  color: "text.primary",
                   fontWeight: 600,
-                  '&:hover': {
-                    color: 'primary.main',
-                    bgcolor: 'transparent',
+                  "&:hover": {
+                    color: "primary.main",
+                    bgcolor: "transparent",
                   },
                 }}
               >

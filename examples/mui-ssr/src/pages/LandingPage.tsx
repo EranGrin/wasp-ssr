@@ -1,32 +1,32 @@
-import { useState, useCallback } from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Divider from '@mui/material/Divider';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import BrushIcon from '@mui/icons-material/Brush';
-import CodeIcon from '@mui/icons-material/Code';
-import SpeedIcon from '@mui/icons-material/Speed';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import BrushIcon from "@mui/icons-material/Brush";
+import CodeIcon from "@mui/icons-material/Code";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import SpeedIcon from "@mui/icons-material/Speed";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useCallback, useState } from "react";
 
 // -- SEO head metadata for SSR --
 export const head = () => ({
-  title: 'MUI SSR Example | Wasp',
+  title: "MUI SSR Example | Wasp",
   meta: [
     {
-      name: 'description',
+      name: "description",
       content:
-        'A minimal landing page demonstrating MUI with server-side rendering in the Wasp framework.',
+        "A minimal landing page demonstrating MUI with server-side rendering in the Wasp framework.",
     },
-    { property: 'og:title', content: 'MUI SSR Example | Wasp' },
+    { property: "og:title", content: "MUI SSR Example | Wasp" },
   ],
 });
 
@@ -42,30 +42,30 @@ function HeroSection() {
         py: { xs: 10, md: 15 },
         background: (theme) =>
           `linear-gradient(135deg, ${theme.palette.primary.darker} 0%, ${theme.palette.primary.dark} 50%, ${theme.palette.primary.main} 100%)`,
-        color: 'common.white',
-        position: 'relative',
-        overflow: 'hidden',
+        color: "common.white",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       {/* Decorative circles */}
       <Box
         sx={{
-          position: 'absolute',
+          position: "absolute",
           width: 400,
           height: 400,
-          borderRadius: '50%',
-          bgcolor: 'rgba(255,255,255,0.05)',
+          borderRadius: "50%",
+          bgcolor: "rgba(255,255,255,0.05)",
           top: -100,
           right: -100,
         }}
       />
       <Box
         sx={{
-          position: 'absolute',
+          position: "absolute",
           width: 250,
           height: 250,
-          borderRadius: '50%',
-          bgcolor: 'rgba(255,255,255,0.04)',
+          borderRadius: "50%",
+          bgcolor: "rgba(255,255,255,0.04)",
           bottom: -80,
           left: -40,
         }}
@@ -77,9 +77,9 @@ function HeroSection() {
             <Typography
               variant="overline"
               sx={{
-                color: 'primary.lighter',
+                color: "primary.lighter",
                 mb: 2,
-                display: 'block',
+                display: "block",
               }}
             >
               Wasp + MUI + SSR
@@ -92,9 +92,9 @@ function HeroSection() {
             <Typography
               sx={{
                 mb: 5,
-                color: 'rgba(255,255,255,0.72)',
+                color: "rgba(255,255,255,0.72)",
                 maxWidth: 480,
-                fontSize: '1.125rem',
+                fontSize: "1.125rem",
                 lineHeight: 1.7,
               }}
             >
@@ -109,9 +109,9 @@ function HeroSection() {
                 variant="contained"
                 size="large"
                 sx={{
-                  bgcolor: 'common.white',
-                  color: 'primary.dark',
-                  '&:hover': { bgcolor: 'grey.100' },
+                  bgcolor: "common.white",
+                  color: "primary.dark",
+                  "&:hover": { bgcolor: "grey.100" },
                 }}
               >
                 Get Started
@@ -122,9 +122,9 @@ function HeroSection() {
                 size="large"
                 startIcon={<PlayArrowIcon />}
                 sx={{
-                  color: 'common.white',
-                  borderColor: 'rgba(255,255,255,0.4)',
-                  '&:hover': { borderColor: 'common.white' },
+                  color: "common.white",
+                  borderColor: "rgba(255,255,255,0.4)",
+                  "&:hover": { borderColor: "common.white" },
                 }}
               >
                 See How It Works
@@ -133,31 +133,40 @@ function HeroSection() {
           </Grid>
 
           <Grid
-            item xs={12} md={6}
-            sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}
+            item
+            xs={12}
+            md={6}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              justifyContent: "center",
+            }}
           >
             <Box
               sx={{
                 width: 320,
                 height: 320,
                 borderRadius: 4,
-                bgcolor: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
+                bgcolor: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
                 gap: 2,
-                backdropFilter: 'blur(12px)',
+                backdropFilter: "blur(12px)",
               }}
             >
-              <CodeIcon sx={{ fontSize: 64, color: 'primary.lighter' }} />
-              <Typography variant="h6" sx={{ color: 'common.white' }}>
+              <CodeIcon sx={{ fontSize: 64, color: "primary.lighter" }} />
+              <Typography variant="h6" sx={{ color: "common.white" }}>
                 SSR + Emotion
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ color: 'rgba(255,255,255,0.6)', textAlign: 'center', px: 3 }}
+                sx={{
+                  color: "rgba(255,255,255,0.6)",
+                  textAlign: "center",
+                  px: 3,
+                }}
               >
                 View page source to see server-rendered MUI styles in the
                 &lt;head&gt;
@@ -177,31 +186,31 @@ function HeroSection() {
 const SERVICES = [
   {
     icon: <RocketLaunchIcon sx={{ fontSize: 48 }} />,
-    name: 'Server-Side Rendering',
+    name: "Server-Side Rendering",
     description:
-      'Pages are rendered on the server, delivering fully formed HTML with styles to the browser for instant first paint.',
-    color: 'primary' as const,
+      "Pages are rendered on the server, delivering fully formed HTML with styles to the browser for instant first paint.",
+    color: "primary" as const,
   },
   {
     icon: <BrushIcon sx={{ fontSize: 48 }} />,
-    name: 'CSS-in-JS Extraction',
+    name: "CSS-in-JS Extraction",
     description:
-      'Emotion styles are extracted during SSR and injected into the HTML head, eliminating flash of unstyled content.',
-    color: 'secondary' as const,
+      "Emotion styles are extracted during SSR and injected into the HTML head, eliminating flash of unstyled content.",
+    color: "secondary" as const,
   },
   {
     icon: <CodeIcon sx={{ fontSize: 48 }} />,
-    name: 'MUI Components',
+    name: "MUI Components",
     description:
-      'Full Material UI component library with custom theming — Typography, Grid, Paper, Accordion, and more.',
-    color: 'info' as const,
+      "Full Material UI component library with custom theming — Typography, Grid, Paper, Accordion, and more.",
+    color: "info" as const,
   },
   {
     icon: <SpeedIcon sx={{ fontSize: 48 }} />,
-    name: 'Seamless Hydration',
+    name: "Seamless Hydration",
     description:
-      'Server-rendered HTML seamlessly hydrates on the client with matching Emotion class names — no mismatches.',
-    color: 'success' as const,
+      "Server-rendered HTML seamlessly hydrates on the client with matching Emotion class names — no mismatches.",
+    color: "success" as const,
   },
 ];
 
@@ -214,17 +223,17 @@ function ServicesSection() {
           sx={{
             mb: 6,
             maxWidth: 520,
-            mx: { xs: 'auto', md: 'unset' },
-            textAlign: { xs: 'center', md: 'left' },
+            mx: { xs: "auto", md: "unset" },
+            textAlign: { xs: "center", md: "left" },
           }}
         >
-          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+          <Typography variant="overline" sx={{ color: "text.disabled" }}>
             Features
           </Typography>
 
           <Typography variant="h2">What this example shows</Typography>
 
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             A focused demonstration of Wasp's SSR capabilities with the MUI
             component library and Emotion CSS-in-JS.
           </Typography>
@@ -238,16 +247,16 @@ function ServicesSection() {
                 sx={(theme) => ({
                   px: 3,
                   py: 4,
-                  height: '100%',
-                  textAlign: 'center',
+                  height: "100%",
+                  textAlign: "center",
                   borderRadius: 2,
-                  transition: 'box-shadow 0.3s, transform 0.3s',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
+                  transition: "box-shadow 0.3s, transform 0.3s",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
                     boxShadow: theme.shadows[8],
                   },
                   ...(index % 2 === 1 && {
-                    [theme.breakpoints.up('md')]: {
+                    [theme.breakpoints.up("md")]: {
                       py: 6,
                     },
                   }),
@@ -261,7 +270,7 @@ function ServicesSection() {
                   {service.name}
                 </Typography>
 
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {service.description}
                 </Typography>
               </Paper>
@@ -279,27 +288,27 @@ function ServicesSection() {
 
 const FAQS = [
   {
-    question: 'What is SSR in Wasp?',
+    question: "What is SSR in Wasp?",
     answer:
-      'Server-side rendering in Wasp pre-renders your React pages on the server, delivering fully formed HTML to the browser. This improves initial load time, SEO, and prevents flash of unstyled content when used with CSS-in-JS libraries like Emotion.',
+      "Server-side rendering in Wasp pre-renders your React pages on the server, delivering fully formed HTML to the browser. This improves initial load time, SEO, and prevents flash of unstyled content when used with CSS-in-JS libraries like Emotion.",
   },
   {
-    question: 'How does Emotion CSS extraction work?',
+    question: "How does Emotion CSS extraction work?",
     answer:
-      'During SSR, Wasp looks for a src/ssr/styles.tsx file that exports a createSsrStylesProvider function. This function returns a Wrapper component (CacheProvider) and an extractStyles function that collects all generated CSS after rendering and injects it into the HTML <head>.',
+      "During SSR, Wasp looks for a src/ssr/styles.tsx file that exports a createSsrStylesProvider function. This function returns a Wrapper component (CacheProvider) and an extractStyles function that collects all generated CSS after rendering and injects it into the HTML <head>.",
   },
   {
-    question: 'Do I need to configure anything special for MUI?',
+    question: "Do I need to configure anything special for MUI?",
     answer:
-      'You need three things: (1) Install @emotion/cache and @emotion/server alongside MUI, (2) Create src/ssr/styles.tsx with the Emotion cache provider, and (3) Set ssr: true on your pages in main.wasp. Wasp handles the rest automatically.',
+      "You need three things: (1) Install @emotion/cache and @emotion/server alongside MUI, (2) Create src/ssr/styles.tsx with the Emotion cache provider, and (3) Set ssr: true on your pages in main.wasp. Wasp handles the rest automatically.",
   },
   {
-    question: 'Can I use other CSS-in-JS libraries?',
+    question: "Can I use other CSS-in-JS libraries?",
     answer:
-      'Yes! The SSR styles provider hook is library-agnostic. You can implement createSsrStylesProvider for styled-components, Stitches, or any other CSS-in-JS library that supports SSR extraction. The interface just needs a Wrapper component and an extractStyles function.',
+      "Yes! The SSR styles provider hook is library-agnostic. You can implement createSsrStylesProvider for styled-components, Stitches, or any other CSS-in-JS library that supports SSR extraction. The interface just needs a Wrapper component and an extractStyles function.",
   },
   {
-    question: 'How can I verify SSR is working?',
+    question: "How can I verify SSR is working?",
     answer:
       'View the page source (right-click > View Page Source). You should see: (1) Your page content already rendered in the HTML, (2) <style data-emotion="css ..."> tags in the <head> with your MUI styles, (3) No flash of unstyled content on page load.',
   },
@@ -312,18 +321,21 @@ function FaqSection() {
     (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     },
-    []
+    [],
   );
 
   return (
     <Box
       component="section"
-      sx={{ py: { xs: 8, md: 12 }, bgcolor: 'grey.100' }}
+      sx={{ py: { xs: 8, md: 12 }, bgcolor: "grey.100" }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={4} alignItems="flex-start">
           <Grid item xs={12} md={5}>
-            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 2, display: 'block' }}>
+            <Typography
+              variant="overline"
+              sx={{ color: "text.disabled", mb: 2, display: "block" }}
+            >
               FAQ
             </Typography>
 
@@ -331,7 +343,7 @@ function FaqSection() {
               Frequently asked questions
             </Typography>
 
-            <Typography sx={{ color: 'text.secondary' }}>
+            <Typography sx={{ color: "text.secondary" }}>
               Common questions about using MUI with server-side rendering in
               Wasp.
             </Typography>
@@ -345,9 +357,9 @@ function FaqSection() {
                 onChange={handleChange(faq.question)}
                 disableGutters
                 sx={{
-                  bgcolor: 'transparent',
-                  boxShadow: 'none',
-                  '&:before': { display: 'none' },
+                  bgcolor: "transparent",
+                  boxShadow: "none",
+                  "&:before": { display: "none" },
                   py: 0.5,
                 }}
               >
@@ -355,7 +367,7 @@ function FaqSection() {
                   <Typography variant="h6">{faq.question}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography sx={{ color: 'text.secondary' }}>
+                  <Typography sx={{ color: "text.secondary" }}>
                     {faq.answer}
                   </Typography>
                 </AccordionDetails>

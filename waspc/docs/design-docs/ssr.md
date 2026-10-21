@@ -5,6 +5,7 @@ This document describes the design for adding Server-Side Rendering (SSR) suppor
 ## Motivation
 
 Server-Side Rendering improves:
+
 - **SEO**: Search engines can index fully rendered HTML content
 - **Initial Load Performance**: Users see content faster (especially on slow connections)
 - **Social Sharing**: Open Graph meta tags are rendered server-side for link previews
@@ -14,6 +15,7 @@ Currently, Wasp apps are purely client-side rendered (CSR), which means the init
 ## Requirements
 
 ### Basic
+
 - Pages can opt-in to SSR via a `ssr: true` property
 - SSR pages must be public (no `authRequired: true`) - this simplifies the initial implementation
 - Non-SSR pages continue to work as before (CSR)
@@ -21,10 +23,12 @@ Currently, Wasp apps are purely client-side rendered (CSR), which means the init
 - Support for a lightweight per-page `head` export (title/meta/link) for SSR
 
 ### Non-Goals (this iteration)
+
 - SSR in dev mode (`wasp start`) | Streaming/partial hydration | React Query data prefetch
 - Auth-aware SSR (public pages only) | React Server Components | Server actions/functions
 
 ### Scope
+
 This is a lightweight SSR for public/marketing pages where HTML-first matters. Not a full SSR framework.
 
 > **Why not full SSR?** RSC, server actions, and streaming would require: split server/client component graphs, Flight manifest, streaming runtime, new routing model, server action transport/security, and turning the web client into a server runtime. Out of scope for this POC.
@@ -50,7 +54,8 @@ page LandingPage {
 }
 ```
 
-**Rationale**: 
+**Rationale**:
+
 - Not all pages benefit from SSR (e.g., dashboards behind auth)
 - Keeps the default behavior (CSR) unchanged
 - Gives developers fine-grained control
@@ -62,6 +67,7 @@ page LandingPage {
 **Decision**: Pages with `authRequired: true` cannot have `ssr: true`.
 
 **Rationale**:
+
 - SSR with authentication requires handling cookies/sessions on the server
 - The SSR server would need access to the auth system
 - Adds significant complexity for limited benefit (auth pages are typically not SEO-critical)
@@ -73,11 +79,13 @@ page LandingPage {
 **Decision**: A dedicated Node.js HTTP server (`server-ssr.mjs`) serves the production build with SSR support.
 
 **Rationale**:
+
 - Keeps SSR concerns separate from the main Wasp server
 - The SSR server only needs to import the client build, not the full server
 - Simpler deployment story - can be deployed alongside or separately
 
 **Alternative Considered**: Integrating SSR into the main Wasp server. Rejected because:
+
 - Would couple client rendering to server deployment
 - More complex server setup
 - Harder to scale independently
@@ -85,6 +93,7 @@ page LandingPage {
 ### Build Pipeline
 
 **Decision**: Two Vite builds for SSR-enabled apps:
+
 1. Standard client build: `vite build` → `web-app/build/`
 2. SSR build: `vite build --ssr` → `web-app/build-ssr/`
 
@@ -114,6 +123,7 @@ This partitioning happens automatically in the generated `routes.tsx` virtual mo
 ```
 
 Client code checks this attribute:
+
 ```tsx
 if (rootElement.dataset.waspSsr === "1") {
   ReactDOM.hydrateRoot(rootElement, app);
@@ -134,7 +144,7 @@ export function getRouteMatchInfo(url: string): {
   ssr: boolean;
   outsideBase: boolean;
   isCatchAll: boolean;
-}
+};
 ```
 
 **Rationale**: Reuses the same routing logic as the client, ensuring consistency.
@@ -196,12 +206,14 @@ This keeps the feature focused on landing/marketing pages and avoids the larger 
 ### Key Files Added/Modified
 
 **New Files:**
+
 - `waspc/data/Generator/templates/web-app/server-ssr.mjs` - SSR HTTP server (browser API polyfills, error fallback to CSR)
 - `waspc/data/Generator/templates/web-app/ssr-package.json` - SSR server dependencies (sirv for static asset serving)
 - `waspc/data/Generator/templates/sdk/wasp/client/vite/virtual-files/files/entry-server.tsx` - SSR entry point (route matching, rendering, head resolution, CSS-in-JS integration)
 - `waspc/data/Generator/templates/sdk/wasp/client/ssr/index.ts` - `SsrStylesProvider` TypeScript interface for CSS-in-JS SSR hooks
 
 **Modified Files (highlights):**
+
 - `waspc/src/Wasp/AppSpec/Page.hs` - Added `ssr :: Maybe Bool` field
 - `waspc/src/Wasp/AppSpec/Valid.hs` - Validation: SSR + authRequired = error
 - `waspc/src/Wasp/Generator/WebAppGenerator.hs` - Conditional generation of SSR files (only when `hasSsrEnabledPage`)
@@ -223,17 +235,16 @@ export const head = () => ({
   title: "Home",
   meta: [
     { name: "description", content: "Landing page" },
-    { property: "og:title", content: "Home" }
+    { property: "og:title", content: "Home" },
   ],
-  link: [
-    { rel: "canonical", href: "https://example.com" }
-  ]
+  link: [{ rel: "canonical", href: "https://example.com" }],
 });
 ```
 
 The SSR entry reads this export and injects the resulting tags into `<!--ssr-head-->`.
 
 **Rationale**:
+
 - No new dependencies
 - No config changes
 - Good enough for landing pages and basic SEO
@@ -255,6 +266,7 @@ page NotFoundPage {
 ```
 
 **Rationale**:
+
 - Proper HTTP status codes are important for SEO (search engines should know it's a 404)
 - The catch-all route semantically represents "page not found"
 
@@ -268,10 +280,12 @@ page NotFoundPage {
 SSR changes the deployment strategy for the client app. A generated `ssr.json` config file (containing `{ "enabled": true/false }`) is used by the deployment tooling to detect whether SSR is enabled.
 
 **Fly.io:**
+
 - **SSR enabled**: Generates a Node.js Dockerfile that runs `server-ssr.mjs`. Includes `npm install` for the sirv static-serving dependency.
 - **SSR disabled**: Uses `pierrezemb/gostatic` Docker image for static file serving (unchanged from pre-SSR behavior).
 
 **Railway:**
+
 - **SSR enabled**: Deploys the full `web-app/` directory. Railway's Nixpacks detects the `package.json` (with a `start` script pointing to `node server-ssr.mjs`) and runs it as a Node.js service.
 - **SSR disabled**: Deploys only the `build/` subdirectory with a `Staticfile` marker for Railway's static file server (unchanged).
 
@@ -291,7 +305,7 @@ The SSR server sets up minimal browser API stubs (`window`, `document`, `localSt
 
 ```typescript
 // In the SSR bundle, after the transform:
-var isBrowser = "undefined" !== "undefined"  // = false ✓
+var isBrowser = "undefined" !== "undefined"; // = false ✓
 ```
 
 The replacement uses regex alternation to match string literals first (and preserve them), preventing false replacements inside strings like `"if (typeof window !== 'undefined') ..."` (which appears in papaparse and other libraries that embed code as strings).
@@ -299,6 +313,7 @@ The replacement uses regex alternation to match string literals first (and prese
 The runtime polyfills remain as a safety net for code that accesses these globals **without** a `typeof` guard (e.g., `document.createElement()`).
 
 **Effect**: All `typeof window` and `typeof document` browser-detection guards in the SSR bundle correctly evaluate to `false`, including:
+
 - Emotion's `isBrowser` flag (enables server-side style injection)
 - React's environment detection
 - MUI's feature detection
@@ -335,6 +350,7 @@ type CreateSsrStylesProvider = () => SsrStylesProvider;
 ```
 
 **Rationale**:
+
 - Package-agnostic: works with any CSS-in-JS library
 - Zero-config default: projects without CSS-in-JS don't need to create the file
 - Convention-based: no `main.wasp` or Haskell changes needed
@@ -345,6 +361,7 @@ type CreateSsrStylesProvider = () => SsrStylesProvider;
 **Fallback behavior**: If `src/ssr/styles.tsx` doesn't exist, the `catch` block silently skips it. SSR works normally without CSS-in-JS integration. If the file exists but `createSsrStylesProvider` throws, the error is caught and logged as a warning, and SSR continues without styles.
 
 **Interaction with the `typeof` replacement**: The build-time transform ensures Emotion's `isBrowser` flag is `false` in the SSR bundle. Combined with the SSR styles provider:
+
 1. The `typeof` transform makes Emotion use its synchronous server code path
 2. `createEmotionServer(cache)` sets `cache.compat = true`, storing CSS text in the cache
 3. `extractCriticalToChunks` collects the CSS after render
@@ -377,6 +394,7 @@ page DashboardPage {
 ```
 
 Build and run:
+
 ```bash
 wasp build
 wasp build start
@@ -403,9 +421,11 @@ When working on the SSR feature from within the Wasp repo (e.g., `examples/kitch
 ```
 
 Open:
+
 - `http://localhost:3000` - SSR client
 - `http://localhost:3001` - API server
 
 The SSR server will:
+
 - Render `/` server-side (Landing page)
 - Serve `/dashboard` as client-side rendered (Dashboard page)

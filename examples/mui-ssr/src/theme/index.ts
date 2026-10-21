@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material/styles';
-import { palette } from './palette';
-import { typography } from './typography';
+import { createTheme } from "@mui/material/styles";
+import { palette } from "./palette";
+import { typography } from "./typography";
 
 export const theme = createTheme({
   palette,
@@ -11,15 +11,15 @@ export const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        '*': {
-          boxSizing: 'border-box',
+        "*": {
+          boxSizing: "border-box",
         },
         html: {
-          scrollBehavior: 'smooth',
+          scrollBehavior: "smooth",
         },
         body: {
-          WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale',
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
         },
       },
     },
@@ -30,12 +30,12 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
-          textTransform: 'none',
+          textTransform: "none",
           fontWeight: 700,
         },
         sizeLarge: {
-          padding: '11px 24px',
-          fontSize: '0.9375rem',
+          padding: "11px 24px",
+          fontSize: "0.9375rem",
         },
       },
     },

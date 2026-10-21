@@ -12,14 +12,14 @@ A minimal Wasp example demonstrating **MUI (Material UI)** with **server-side re
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/ssr/styles.tsx` | **Emotion SSR provider** — creates a cache per request, wraps the tree in `CacheProvider`, and extracts critical CSS after render |
-| `src/Root.tsx` | Root component wrapping all pages with `ThemeProvider` + `CssBaseline` |
-| `src/theme/` | Custom MUI theme (palette, typography) |
-| `src/pages/LandingPage.tsx` | Landing page with Hero, Services grid, and FAQ accordion |
-| `src/pages/AboutPage.tsx` | About page with stats and SSR verification section |
-| `main.wasp` | App config with `ssr: true` on both pages |
+| File                        | Purpose                                                                                                                           |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ssr/styles.tsx`        | **Emotion SSR provider** — creates a cache per request, wraps the tree in `CacheProvider`, and extracts critical CSS after render |
+| `src/Root.tsx`              | Root component wrapping all pages with `ThemeProvider` + `CssBaseline`                                                            |
+| `src/theme/`                | Custom MUI theme (palette, typography)                                                                                            |
+| `src/pages/LandingPage.tsx` | Landing page with Hero, Services grid, and FAQ accordion                                                                          |
+| `src/pages/AboutPage.tsx`   | About page with stats and SSR verification section                                                                                |
+| `main.wasp`                 | App config with `ssr: true` on both pages                                                                                         |
 
 ## How SSR Styles Work
 

@@ -37,7 +37,7 @@ import Wasp.Project.Common
     CompileWarning,
     WaspProjectDir,
     dotWaspDirInWaspProjectDir,
-    generatedCodeDirInDotWaspDir
+    generatedCodeDirInDotWaspDir,
   )
 import Wasp.Util.IO (doesDirectoryExist, removeDirectory)
 

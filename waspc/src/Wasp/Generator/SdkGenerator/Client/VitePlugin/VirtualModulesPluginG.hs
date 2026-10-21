@@ -8,20 +8,20 @@ where
 import Data.Aeson (object, (.=))
 import qualified Data.Aeson as Aeson
 import StrongPath (relfile, (</>))
+import qualified StrongPath as SP
 import Wasp.AppSpec (AppSpec)
 import qualified Wasp.AppSpec.App as AS.App
+import qualified Wasp.AppSpec.App.Auth as AS.Auth
 import qualified Wasp.AppSpec.App.Client as AS.App.Client
 import Wasp.AppSpec.Valid (getApp)
+import qualified Wasp.Generator.AuthProviders.OAuth as OAuth
 import Wasp.Generator.FileDraft (FileDraft)
 import qualified Wasp.Generator.JsImport as GJI
 import Wasp.Generator.Monad (Generator)
 import Wasp.Generator.SdkGenerator.Client.VitePlugin.Common (clientEntryPointPath, routesEntryPointPath, ssrEntryPointPath, virtualFilesDirInViteDir, virtualFilesFilesDirInViteDir)
-import qualified Wasp.AppSpec.App.Auth as AS.Auth
-import qualified StrongPath as SP
-import Wasp.Generator.WebAppGenerator.Common (getBaseDir)
 import Wasp.Generator.SdkGenerator.Client.VitePlugin.VirtualModulesPlugin.VirtualRoutesG (genVirtualRoutesTsx)
-import qualified Wasp.Generator.AuthProviders.OAuth as OAuth
 import qualified Wasp.Generator.SdkGenerator.Common as C
+import Wasp.Generator.WebAppGenerator.Common (getBaseDir)
 
 getVirtualModulesPlugin :: AppSpec -> Generator [FileDraft]
 getVirtualModulesPlugin spec =

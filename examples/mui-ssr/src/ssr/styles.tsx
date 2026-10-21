@@ -12,13 +12,13 @@
  *
  * @see https://emotion.sh/docs/ssr -- "Advanced Approach"
  */
-import React from 'react';
-import createCache from '@emotion/cache';
-import { CacheProvider } from '@emotion/react';
-import createEmotionServer from '@emotion/server/create-instance';
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
+import createEmotionServer from "@emotion/server/create-instance";
+import React from "react";
 
 export function createSsrStylesProvider() {
-  const cache = createCache({ key: 'css' });
+  const cache = createCache({ key: "css" });
 
   // createEmotionServer sets cache.compat = true, which makes the internal
   // _insert store actual CSS text (not just `true`) in cache.inserted and

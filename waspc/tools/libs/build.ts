@@ -36,8 +36,9 @@ function buildLib(libDir: string): void {
 
   runCmd("npm", ["ci", "--include=dev"], { cwd: libDir });
   runCmd("npm", ["pack"], { cwd: libDir });
-  const tarballs = readdirSync(libDir).filter(name => name.endsWith(".tgz"));
-  if (tarballs.length !== 1) throw new Error(`Expected one packed archive in ${libDir}`);
+  const tarballs = readdirSync(libDir).filter((name) => name.endsWith(".tgz"));
+  if (tarballs.length !== 1)
+    throw new Error(`Expected one packed archive in ${libDir}`);
   normalizePackedTarball(join(libDir, tarballs[0]));
 }
 

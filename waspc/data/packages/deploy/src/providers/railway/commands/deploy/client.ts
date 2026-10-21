@@ -1,7 +1,4 @@
-import {
-  buildClient,
-  isSsrEnabled,
-} from "../../../../common/clientApp.js";
+import { buildClient, isSsrEnabled } from "../../../../common/clientApp.js";
 import {
   displayWaspRocketImage,
   waspSays,
