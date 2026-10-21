@@ -7,16 +7,17 @@ import ShellCommands
     setWaspDbToPSQL,
     waspCliBuild,
   )
-import SnapshotTest (SnapshotTest, makeSnapshotTest)
+import SnapshotTest (SnapshotTest, makeSnapshotTest, withWebAppBundleCheck)
 
 waspBuildSnapshotTest :: SnapshotTest
 waspBuildSnapshotTest =
-  makeSnapshotTest
-    "wasp-build"
-    [ createSnapshotWaspProjectFromMinimalStarter,
-      inSnapshotWaspProjectDir
-        [ setWaspDbToPSQL,
-          waspCliBuild,
-          buildAndRemoveWaspProjectDockerImage
-        ]
-    ]
+  withWebAppBundleCheck $
+    makeSnapshotTest
+      "wasp-build"
+      [ createSnapshotWaspProjectFromMinimalStarter,
+        inSnapshotWaspProjectDir
+          [ setWaspDbToPSQL,
+            waspCliBuild,
+            buildAndRemoveWaspProjectDockerImage
+          ]
+      ]
