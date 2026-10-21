@@ -170,7 +170,7 @@ npmDepsFromWasp spec =
             [ ("cookie-parser", "~1.4.6"),
               ("cors", "^2.8.5"),
               ("express", expressVersionStr),
-              ("morgan", "~1.10.0"),
+              ("morgan", "~1.12.1"),
               ("dotenv", show dotenvVersion),
               ("helmet", "^6.0.0"),
               ("superjson", show superjsonVersion)

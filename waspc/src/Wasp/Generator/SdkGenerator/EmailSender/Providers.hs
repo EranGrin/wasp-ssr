@@ -29,7 +29,7 @@ smtp =
     }
   where
     nodeMailerVersionRange :: SV.Range
-    nodeMailerVersionRange = SV.Range [SV.backwardsCompatibleWith (SV.Version 8 0 1)]
+    nodeMailerVersionRange = SV.Range [SV.backwardsCompatibleWith (SV.Version 10 1 7)]
 
     nodeMailerDependency :: Npm.Dependency.Dependency
     nodeMailerDependency = Npm.Dependency.make ("nodemailer", show nodeMailerVersionRange)
