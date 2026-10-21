@@ -12,6 +12,13 @@
     "vite": "^7.0.6"
   },
   "name": "wasp-app",
+  "overrides": {
+    "@vitest/ui": "4.1.12",
+    "vitest": {
+      ".": "4.1.12",
+      "vite": "^7.0.6"
+    }
+  },
   "type": "module",
   "workspaces": [
     ".wasp/out/*",

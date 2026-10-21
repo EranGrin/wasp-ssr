@@ -166,6 +166,13 @@ generatePackageJson newProjectDetails =
           "@types/react": "^19.2.7",
           "@types/react-dom": "^19.2.3",
           "prisma": "5.19.1"
+        },
+        "overrides": {
+          "vitest": {
+            ".": "4.1.12",
+            "vite": "^7.0.6"
+          },
+          "@vitest/ui": "4.1.12"
         }
       }
 
