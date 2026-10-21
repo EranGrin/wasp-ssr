@@ -26,6 +26,28 @@ Wasp enables you to quickly and easily write both unit tests and React component
   </div>
 </details>
 
+### Vitest Version on npm 10
+
+New projects created with Wasp's built-in `wasp new` starters (minimal, basic and the AI-generated starter) pin Vitest through `overrides` in the root `package.json`. Projects from other templates, such as Open SaaS, may not include it yet:
+
+```json title="package.json"
+{
+  "overrides": {
+    "vitest": {
+      ".": "4.1.12",
+      "vite": "^7.0.6"
+    },
+    "@vitest/ui": "4.1.12"
+  }
+}
+```
+
+Without it, a fresh install resolves the newest Vitest 4.1 release together with Vite 8, and npm 10 (bundled with Node.js 22) fails with `Cannot read properties of null (reading 'edgesOut')`. The override keeps Vitest on a patched 4.1 release (4.1.12, which fixes the mocker advisories GHSA-xp26-3454-mjgp and GHSA-qxg6-89mg-rqv8) and on the Vite 7 your project already uses. npm 11 installs either way. These are exact pins, so Vitest doesn't receive patch updates on its own: when you upgrade Vitest, update both pins together and check that a fresh install still works on npm 10.
+
+Projects created before this change don't have the override. If installing one fails with that error on npm 10, add the `overrides` block above to your root `package.json`, merging it with any overrides you already have, and run `wasp compile` again. If your root `package.json` also lists `vitest` or `@vitest/ui` directly, npm rejects a different override spec with `EOVERRIDE`. Set those dependencies to `4.1.12` too, or reference them from the override (`".": "$vitest"` under `vitest`, and `"@vitest/ui": "$@vitest/ui"`); a reference follows your dependency's range instead of pinning 4.1.12.
+
+A project that has already installed keeps the Vitest version in its `package-lock.json`; adding the override doesn't change it. Moving such a lock to a newer Vitest on npm 10 can hit the same error, so run `npm update vitest @vitest/ui` with npm 11 instead.
+
 ### Writing Tests
 
 For Wasp to pick up your tests, they should be placed within the `src` directory and use an extension that matches [these glob patterns](https://vitest.dev/config#include). Some of the file names that Wasp will pick up as tests:
