@@ -216,7 +216,10 @@ Press any key to continue or Ctrl+C to cancel.`);
       waspSays(
         "SSR is enabled. Setting min_machines_running = 1 for client app...",
       );
-      replaceLineInLocalToml(minMachinesOptionRegex, "min_machines_running = 1");
+      replaceLineInLocalToml(
+        minMachinesOptionRegex,
+        "min_machines_running = 1",
+      );
     }
   }
 

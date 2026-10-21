@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Link from '@mui/material/Link';
-import { Link as RouterLink } from 'react-router';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { Link as RouterLink } from "react-router";
 
 export function Footer() {
   return (
-    <Box component="footer" sx={{ bgcolor: 'grey.900', color: 'common.white' }}>
+    <Box component="footer" sx={{ bgcolor: "grey.900", color: "common.white" }}>
       <Container maxWidth="lg" sx={{ py: 8 }}>
         <Stack
-          direction={{ xs: 'column', md: 'row' }}
+          direction={{ xs: "column", md: "row" }}
           spacing={4}
           justifyContent="space-between"
         >
@@ -19,27 +19,42 @@ export function Footer() {
             <Typography variant="h5" sx={{ fontWeight: 800, mb: 1 }}>
               Wasp MUI
             </Typography>
-            <Typography variant="body2" sx={{ color: 'grey.500', maxWidth: 320 }}>
-              A minimal example demonstrating MUI with server-side rendering
-              in the Wasp framework, featuring Emotion CSS-in-JS extraction.
+            <Typography
+              variant="body2"
+              sx={{ color: "grey.500", maxWidth: 320 }}
+            >
+              A minimal example demonstrating MUI with server-side rendering in
+              the Wasp framework, featuring Emotion CSS-in-JS extraction.
             </Typography>
           </Box>
 
           <Stack direction="row" spacing={5}>
             <Stack spacing={1.5}>
-              <Typography variant="overline" sx={{ color: 'grey.500' }}>
+              <Typography variant="overline" sx={{ color: "grey.500" }}>
                 Pages
               </Typography>
-              <Link component={RouterLink} to="/" color="inherit" underline="hover" variant="body2">
+              <Link
+                component={RouterLink}
+                to="/"
+                color="inherit"
+                underline="hover"
+                variant="body2"
+              >
                 Home
               </Link>
-              <Link component={RouterLink} to="/about" color="inherit" underline="hover" variant="body2">
+              <Link
+                component={RouterLink}
+                to="/about"
+                color="inherit"
+                underline="hover"
+                variant="body2"
+              >
                 About
               </Link>
             </Stack>
 
             <Stack spacing={1.5}>
-              <Typography variant="overline" sx={{ color: 'grey.500' }}>
+              <Typography variant="overline" sx={{ color: "grey.500" }}>
                 Resources
               </Typography>
               <Link
@@ -66,9 +81,12 @@ export function Footer() {
           </Stack>
         </Stack>
 
-        <Divider sx={{ my: 4, borderColor: 'grey.800' }} />
+        <Divider sx={{ my: 4, borderColor: "grey.800" }} />
 
-        <Typography variant="body2" sx={{ color: 'grey.600', textAlign: 'center' }}>
+        <Typography
+          variant="body2"
+          sx={{ color: "grey.600", textAlign: "center" }}
+        >
           Built with Wasp + MUI + Emotion SSR
         </Typography>
       </Container>

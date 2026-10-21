@@ -1,14 +1,14 @@
 {
   "name": "wasp-repo",
   "scripts": {
-    "prettier:check": "prettier --ignore-unknown --check --config .prettierrc .",
+    "prettier:check": "node --test scripts/dockerfile-formatter.test.mjs && prettier --ignore-unknown --check --config .prettierrc .",
     "prettier:format": "prettier --ignore-unknown --write --config .prettierrc ."
   },
   "devDependencies": {
-    "prettier": "3.5.3",
+    "prettier": "3.6.2",
     "prettier-plugin-organize-imports": "4.1.0",
     "prettier-plugin-pkg": "0.19.1",
-    "prettier-plugin-sh": "0.17.4",
+    "prettier-plugin-sh": "0.18.1",
     "prettier-plugin-tailwindcss": "0.7.2",
     "typescript": "~5.8.3"
   }
