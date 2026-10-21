@@ -10,20 +10,24 @@ import { routes } from '../../router/index'
 export function getRouter({
   routesMapping,
   rootElement,
+  routeNameToSsr,
 }: {
   routesMapping: Record<string, React.ComponentType>,
   rootElement: React.ReactNode,
+  routeNameToSsr: Record<string, boolean>,
 }) {
   const waspDefinedRoutes = [
     {
       path: "/oauth/callback",
       Component: OAuthCallbackPage,
+      handle: { ssr: false },
     },
   ]
   const userDefinedRoutes = Object.entries(routes).map(([routeKey, route]) => {
     return {
       path: route.to,
       Component: routesMapping[routeKey],
+      handle: { ssr: routeNameToSsr[routeKey] ?? false },
     }
   })
 

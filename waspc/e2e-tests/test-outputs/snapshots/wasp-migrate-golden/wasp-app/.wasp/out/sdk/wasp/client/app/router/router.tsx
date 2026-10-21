@@ -9,9 +9,11 @@ import { routes } from '../../router/index'
 export function getRouter({
   routesMapping,
   rootElement,
+  routeNameToSsr,
 }: {
   routesMapping: Record<string, React.ComponentType>,
   rootElement: React.ReactNode,
+  routeNameToSsr: Record<string, boolean>,
 }) {
   const waspDefinedRoutes = [
   ]
@@ -19,6 +21,7 @@ export function getRouter({
     return {
       path: route.to,
       Component: routesMapping[routeKey],
+      handle: { ssr: routeNameToSsr[routeKey] ?? false },
     }
   })
 

@@ -41,6 +41,7 @@ wasp-app/.wasp/out/sdk/wasp/client/router/Link.tsx
 wasp-app/.wasp/out/sdk/wasp/client/router/index.ts
 wasp-app/.wasp/out/sdk/wasp/client/router/linkHelpers.ts
 wasp-app/.wasp/out/sdk/wasp/client/router/types.ts
+wasp-app/.wasp/out/sdk/wasp/client/ssr/index.ts
 wasp-app/.wasp/out/sdk/wasp/client/test/index.ts
 wasp-app/.wasp/out/sdk/wasp/client/test/setup.ts
 wasp-app/.wasp/out/sdk/wasp/client/test/vitest/helpers.tsx
@@ -54,6 +55,7 @@ wasp-app/.wasp/out/sdk/wasp/client/vite/plugins/validateEnv.ts
 wasp-app/.wasp/out/sdk/wasp/client/vite/plugins/virtualModules.ts
 wasp-app/.wasp/out/sdk/wasp/client/vite/plugins/wasp.ts
 wasp-app/.wasp/out/sdk/wasp/client/vite/plugins/waspConfig.ts
+wasp-app/.wasp/out/sdk/wasp/client/vite/virtual-files/files/entry-server.tsx
 wasp-app/.wasp/out/sdk/wasp/client/vite/virtual-files/files/index.html
 wasp-app/.wasp/out/sdk/wasp/client/vite/virtual-files/files/index.tsx
 wasp-app/.wasp/out/sdk/wasp/client/vite/virtual-files/files/routes.tsx
@@ -180,6 +182,10 @@ wasp-app/.wasp/out/sdk/wasp/dist/client/router/types.d.ts
 wasp-app/.wasp/out/sdk/wasp/dist/client/router/types.d.ts.map
 wasp-app/.wasp/out/sdk/wasp/dist/client/router/types.js
 wasp-app/.wasp/out/sdk/wasp/dist/client/router/types.js.map
+wasp-app/.wasp/out/sdk/wasp/dist/client/ssr/index.d.ts
+wasp-app/.wasp/out/sdk/wasp/dist/client/ssr/index.d.ts.map
+wasp-app/.wasp/out/sdk/wasp/dist/client/ssr/index.js
+wasp-app/.wasp/out/sdk/wasp/dist/client/ssr/index.js.map
 wasp-app/.wasp/out/sdk/wasp/dist/client/test/index.d.ts
 wasp-app/.wasp/out/sdk/wasp/dist/client/test/index.d.ts.map
 wasp-app/.wasp/out/sdk/wasp/dist/client/test/index.js
@@ -232,6 +238,7 @@ wasp-app/.wasp/out/sdk/wasp/dist/client/vite/plugins/waspConfig.d.ts
 wasp-app/.wasp/out/sdk/wasp/dist/client/vite/plugins/waspConfig.d.ts.map
 wasp-app/.wasp/out/sdk/wasp/dist/client/vite/plugins/waspConfig.js
 wasp-app/.wasp/out/sdk/wasp/dist/client/vite/plugins/waspConfig.js.map
+wasp-app/.wasp/out/sdk/wasp/dist/client/vite/virtual-files/files/entry-server.tsx
 wasp-app/.wasp/out/sdk/wasp/dist/client/vite/virtual-files/files/index.html
 wasp-app/.wasp/out/sdk/wasp/dist/client/vite/virtual-files/files/index.tsx
 wasp-app/.wasp/out/sdk/wasp/dist/client/vite/virtual-files/files/routes.tsx
@@ -417,6 +424,8 @@ wasp-app/.wasp/out/server/src/routes/operations/index.js
 wasp-app/.wasp/out/server/src/server.ts
 wasp-app/.wasp/out/server/src/views/wrong-port.ts
 wasp-app/.wasp/out/server/tsconfig.json
+wasp-app/.wasp/out/server/watch-server.mjs
+wasp-app/.wasp/out/web-app/ssr.json
 wasp-app/.waspignore
 wasp-app/.wasproot
 wasp-app/main.wasp
