@@ -32,7 +32,7 @@ import qualified StrongPath as SP
 import System.Directory (doesFileExist)
 import System.Directory.Recursive (getDirFiltered)
 import System.Exit (ExitCode (..))
-import System.FilePath (equalFilePath, isExtensionOf, makeRelative, takeFileName)
+import System.FilePath (equalFilePath, isExtensionOf, makeRelative, splitDirectories, takeFileName)
 import System.Process (CreateProcess (..), callCommand, createProcess, interruptProcessGroupOf, shell, waitForProcess)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (goldenVsFileDiff)
@@ -131,7 +131,7 @@ generateSnapshotFileListManifest snapshotDir snapshotFileListManifestFile =
         >>= filterM doesFileExist -- only files, no directories
         >>= mapM SP.parseAbsFile
       where
-        filterIgnoredFileNames = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile]
+        filterIgnoredFileNames path = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile] path && not (isBundlerOutputDir path)
         ignoredFileNames =
           [ ".DS_Store",
             "node_modules"
@@ -157,7 +157,7 @@ getNormalizedSnapshotFilesForContentCheck snapshotDir = do
         >>= filterM doesFileExist -- only files, no directories
         >>= mapM SP.parseAbsFile
       where
-        filterIgnoredFileNames = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile]
+        filterIgnoredFileNames path = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile] path && not (isBundlerOutputDir path)
         ignoredFileNames =
           [ ".DS_Store",
             "node_modules",
@@ -223,6 +223,18 @@ isTgzFile :: FilePath -> Bool
 isTgzFile = (".tgz" `isExtensionOf`)
 
 type FileName = String
+
+-- | Vite client and SSR bundle directories (@.wasp/out/web-app/build@ and
+-- @build-ssr@) written by @wasp build@. Their file names and contents are
+-- content hashes of the bundled dependency graph, which fresh test projects
+-- resolve from version ranges, so they would change with compatible upstream
+-- releases rather than with Wasp. The bundling itself is still exercised:
+-- @wasp build@ must succeed for the snapshot command to pass.
+isBundlerOutputDir :: FilePath -> Bool
+isBundlerOutputDir path =
+  case reverse (splitDirectories path) of
+    dirName : "web-app" : "out" : ".wasp" : _ -> dirName `elem` ["build", "build-ssr"]
+    _ -> False
 
 createFilenameFilter :: [FileName -> Bool] -> FilePath -> Bool
 createFilenameFilter predicates filePath = all ($ takeFileName filePath) predicates
