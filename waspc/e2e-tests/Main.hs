@@ -1,8 +1,10 @@
+import BundleOutputCheck (bundleOutputCheckSpec)
 import Control.Concurrent.Async (mapConcurrently)
 import SnapshotTest (testTreeFromSnapshotTest)
 import System.Info (os)
 import Test (testTreeFromTest)
 import Test.Tasty (TestTree, defaultMain, testGroup)
+import Test.Tasty.Hspec (testSpec)
 import Tests.SnapshotTests.KitchenSinkSnapshotTest (kitchenSinkSnapshotTest)
 import Tests.SnapshotTests.WaspBuildSnapshotTest (waspBuildSnapshotTest)
 import Tests.SnapshotTests.WaspCompileSnapshotTest (waspCompileSnapshotTest)
@@ -71,9 +73,12 @@ e2eTests = do
         waspDbMigrateDevTest
       ]
 
+  bundleOutputCheckTree <- testSpec "Bundle output check" bundleOutputCheckSpec
+
   return $
     testGroup
       "E2E tests"
-      [ testGroup "Snapshot Tests" snapshotTestTrees,
+      [ bundleOutputCheckTree,
+        testGroup "Snapshot Tests" snapshotTestTrees,
         testGroup "Tests" testTrees
       ]

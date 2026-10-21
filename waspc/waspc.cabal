@@ -838,6 +838,7 @@ test-suite waspc-e2e-tests
   other-modules:
     Test
     SnapshotTest
+    BundleOutputCheck
     FileSystem
     ShellCommands
     Tests.WaspBuildStartTest

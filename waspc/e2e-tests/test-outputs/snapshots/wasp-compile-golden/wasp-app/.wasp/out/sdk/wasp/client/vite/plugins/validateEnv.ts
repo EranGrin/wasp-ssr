@@ -3,7 +3,7 @@ import { type Plugin } from 'vite'
 import { loadWaspEnvClient } from './envFile.js'
 import {
   getValidatedEnvOrError,
-  formatZodEnvErrors,
+  formatZodEnvError,
 } from '../../../env/validation.js'
 import { clientEnvSchema } from '../../env/schema.js'
 import { getColorizedConsoleFormatString } from '../../../universal/ansiColors.js'
@@ -20,7 +20,7 @@ export function validateEnv(): Plugin {
 
       // Exit if we are in build mode, because we can't show the error in the browser.
       if (config.command === 'build' && !validationResult.success) {
-        const message = formatZodEnvErrors(validationResult.error.issues)
+        const message = formatZodEnvError(validationResult.error)
         console.error(`${redColorFormatString}${message}`)
         process.exit(1)
       }
@@ -31,7 +31,7 @@ export function validateEnv(): Plugin {
       }
 
       // Send the error to the browser.
-      const message = formatZodEnvErrors(validationResult.error.issues)
+      const message = formatZodEnvError(validationResult.error)
       server.ws.on('connection', () => {
         server.ws.send({
           type: 'error',

@@ -4,7 +4,8 @@ import * as z from "zod";
 export const serverEnvValidationSchema = defineEnvValidationSchema(
   z.object({
     TEST_ENV_VAR: z.string({
-      required_error: "TEST_ENV_VAR is required.",
+      error: (issue) =>
+        issue.input === undefined ? "TEST_ENV_VAR is required." : undefined,
     }),
   }),
 );

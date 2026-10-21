@@ -5,10 +5,12 @@
 module SnapshotTest
   ( SnapshotTest,
     makeSnapshotTest,
+    withWebAppBundleCheck,
     testTreeFromSnapshotTest,
   )
 where
 
+import BundleOutputCheck (checkWebAppBundleOutput)
 import Control.Exception (bracket)
 import Control.Monad (filterM)
 import qualified Data.Aeson as Aeson
@@ -32,34 +34,46 @@ import qualified StrongPath as SP
 import System.Directory (doesFileExist)
 import System.Directory.Recursive (getDirFiltered)
 import System.Exit (ExitCode (..))
-import System.FilePath (equalFilePath, isExtensionOf, makeRelative, takeFileName)
+import System.FilePath (equalFilePath, isExtensionOf, makeRelative, splitDirectories, takeFileName)
 import System.Process (CreateProcess (..), callCommand, createProcess, interruptProcessGroupOf, shell, waitForProcess)
+import Test.Hspec (expectationFailure, it)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (goldenVsFileDiff)
+import Test.Tasty.Hspec (testSpec)
 
 data SnapshotTest = SnapshotTest
   { name :: String,
-    shellCommandBuilder :: ShellCommandBuilder SnapshotTestContext [ShellCommand]
+    shellCommandBuilder :: ShellCommandBuilder SnapshotTestContext [ShellCommand],
+    checksWebAppBundle :: Bool
   }
 
 makeSnapshotTest :: String -> [ShellCommandBuilder SnapshotTestContext ShellCommand] -> SnapshotTest
 makeSnapshotTest name shellCommandBuilders =
   SnapshotTest
     { name,
-      shellCommandBuilder = sequence shellCommandBuilders
+      shellCommandBuilder = sequence shellCommandBuilders,
+      checksWebAppBundle = False
     }
+
+-- | Also asserts the structure of the Vite output in @.wasp/out/web-app@
+-- ('checkWebAppBundleOutput'), which snapshot comparison skips. Use it for
+-- snapshot tests whose commands run @wasp build@.
+withWebAppBundleCheck :: SnapshotTest -> SnapshotTest
+withWebAppBundleCheck snapshotTest = snapshotTest {checksWebAppBundle = True}
 
 -- | Prepares a 'SnapshotTest' (executing shell commands and generating snapshots),
 --  and then creates a test tree for comparing the generated files to the "golden" (expected) versions.
 testTreeFromSnapshotTest :: SnapshotTest -> IO TestTree
-testTreeFromSnapshotTest = fmap createSnapshotTestTree . prepareSnapshotTestData
+testTreeFromSnapshotTest snapshotTest = prepareSnapshotTestData snapshotTest >>= createSnapshotTestTree
 
 -- | Data needed to create a snapshot test tree.
 data SnapshotTestData = SnapshotTestData
   { name :: String,
     currentSnapshotDir :: Path' Abs (Dir SnapshotDir),
     goldenSnapshotDir :: Path' Abs (Dir SnapshotDir),
-    currentSnapshotFilesForContentCheck :: [Path' Abs (File SnapshotFile)]
+    currentSnapshotFilesForContentCheck :: [Path' Abs (File SnapshotFile)],
+    -- | Problems found by 'checkWebAppBundleOutput', when the test asks for it.
+    webAppBundleErrors :: Maybe [String]
   }
 
 prepareSnapshotTestData :: SnapshotTest -> IO SnapshotTestData
@@ -73,24 +87,38 @@ prepareSnapshotTestData snapshotTest = do
   executeSnapshotTestCommand snapshotTest currentSnapshotDir
   generateSnapshotFileListManifest currentSnapshotDir currentSnapshotFileListManifestFile
   currentSnapshotFilesForContentCheck <- getNormalizedSnapshotFilesForContentCheck currentSnapshotDir
+  webAppBundleErrors <-
+    if snapshotTest.checksWebAppBundle
+      then Just <$> checkWebAppBundleOutput "/" (SP.fromAbsDir (currentSnapshotDir </> fromJust (parseRelDir "wasp-app/.wasp/out/web-app")))
+      else return Nothing
 
   return
     SnapshotTestData
       { name = snapshotTest.name,
         currentSnapshotDir,
         goldenSnapshotDir,
-        currentSnapshotFilesForContentCheck
+        currentSnapshotFilesForContentCheck,
+        webAppBundleErrors
       }
 
-createSnapshotTestTree :: SnapshotTestData -> TestTree
-createSnapshotTestTree snapshotTestData =
-  testGroup
-    snapshotTestData.name
-    ( defineSnapshotTestCases
-        snapshotTestData.currentSnapshotDir
-        snapshotTestData.goldenSnapshotDir
-        snapshotTestData.currentSnapshotFilesForContentCheck
-    )
+createSnapshotTestTree :: SnapshotTestData -> IO TestTree
+createSnapshotTestTree snapshotTestData = do
+  bundleTestTrees <- mapM bundleTestTree snapshotTestData.webAppBundleErrors
+  return $
+    testGroup
+      snapshotTestData.name
+      ( maybe id (:) bundleTestTrees $
+          defineSnapshotTestCases
+            snapshotTestData.currentSnapshotDir
+            snapshotTestData.goldenSnapshotDir
+            snapshotTestData.currentSnapshotFilesForContentCheck
+      )
+  where
+    bundleTestTree :: [String] -> IO TestTree
+    bundleTestTree errors =
+      testSpec "web-app bundle output" $
+        it "has a complete Vite build" $
+          if null errors then return () else expectationFailure (unlines errors)
 
 -- | Sets up the snapshot test environment by:
 -- 1. Removing any existing files in the current snapshot directory from a prior test run.
@@ -131,7 +159,7 @@ generateSnapshotFileListManifest snapshotDir snapshotFileListManifestFile =
         >>= filterM doesFileExist -- only files, no directories
         >>= mapM SP.parseAbsFile
       where
-        filterIgnoredFileNames = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile]
+        filterIgnoredFileNames path = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile] path && not (isBundlerOutputDir path)
         ignoredFileNames =
           [ ".DS_Store",
             "node_modules"
@@ -157,7 +185,7 @@ getNormalizedSnapshotFilesForContentCheck snapshotDir = do
         >>= filterM doesFileExist -- only files, no directories
         >>= mapM SP.parseAbsFile
       where
-        filterIgnoredFileNames = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile]
+        filterIgnoredFileNames path = createFilenameFilter [flip notElem ignoredFileNames, not . isTgzFile] path && not (isBundlerOutputDir path)
         ignoredFileNames =
           [ ".DS_Store",
             "node_modules",
@@ -223,6 +251,18 @@ isTgzFile :: FilePath -> Bool
 isTgzFile = (".tgz" `isExtensionOf`)
 
 type FileName = String
+
+-- | Vite client and SSR bundle directories (@.wasp/out/web-app/build@ and
+-- @build-ssr@) written by @wasp build@. Their file names and contents are
+-- content hashes of the bundled dependency graph, which fresh test projects
+-- resolve from version ranges, so they would change with compatible upstream
+-- releases rather than with Wasp. The bundling itself is still exercised:
+-- @wasp build@ must succeed for the snapshot command to pass.
+isBundlerOutputDir :: FilePath -> Bool
+isBundlerOutputDir path =
+  case reverse (splitDirectories path) of
+    dirName : "web-app" : "out" : ".wasp" : _ -> dirName `elem` ["build", "build-ssr"]
+    _ -> False
 
 createFilenameFilter :: [FileName -> Bool] -> FilePath -> Bool
 createFilenameFilter predicates filePath = all ($ takeFileName filePath) predicates

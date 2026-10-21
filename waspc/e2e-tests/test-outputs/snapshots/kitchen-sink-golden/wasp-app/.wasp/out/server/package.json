@@ -8,7 +8,7 @@
     "dotenv": "^16.6.1",
     "express": "~5.1.0",
     "helmet": "^6.0.0",
-    "morgan": "~1.10.0",
+    "morgan": "~1.12.1",
     "socket.io": "^4.6.1",
     "superjson": "^2.2.1"
   },
@@ -26,7 +26,7 @@
   },
   "engineStrict": true,
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.22.2"
   },
   "name": "@wasp.sh/generated-server",
   "nodemonConfig": {
@@ -43,7 +43,7 @@
     "db-seed": "npm run bundle && node --enable-source-maps -r dotenv/config bundle/dbSeed.js",
     "start": "node --enable-source-maps -r dotenv/config bundle/server.js",
     "start-production": "npm run db-migrate-prod && NODE_ENV=production npm run start",
-    "watch": "nodemon --exec 'npm run bundle-and-start || exit 1'"
+    "watch": "nodemon --exec node watch-server.mjs"
   },
   "type": "module",
   "version": "0.0.0"
